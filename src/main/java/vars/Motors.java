@@ -7,14 +7,14 @@ import power.hawks.frc.lib.vars.TalonGroup;
 public class Motors {
 
 	/*Drive Motors*/
-	public static TalonSRX driveFL = new TalonSRX(36); //TODO: Talon Nums
+	public static TalonSRX driveFL = new TalonSRX(37); //TODO: Talon Nums 36 is now 37, 36 didnt work
 	public static TalonSRX driveFR = new TalonSRX(42); //TODO: Talon Nums
 	public static TalonSRX driveBL = new TalonSRX(11); //TODO: Talon Nums
 	public static TalonSRX driveBR = new TalonSRX(7); //TODO: Talon Nums
 	
-	public static TalonSRX liftLeft = new TalonSRX(45);  //changed temporarily from 53
+	public static TalonSRX liftLeft = new TalonSRX(45);  
 	public static TalonSRX liftRight = new TalonSRX(6);  //right elevator
-	
+	public static TalonSRX[] lift = {liftLeft, liftRight};
 	public static TalonSRX driveEncoderLeft = driveBL;
 	public static TalonSRX driveEncoderRight = driveFR;
 	
@@ -26,10 +26,10 @@ public class Motors {
 	
 	/*Other Motor*/
 
-	public static TalonSRX intake = new TalonSRX(57);
-	public static TalonSRX intakeAngle = new TalonSRX(24);
+	public static TalonSRX intake = new TalonSRX(57); 
+	public static TalonSRX intakeAngle = new TalonSRX(24); //24
 	
-	public static TalonSRX lever = new TalonSRX(52);
+	public static TalonSRX lever = new TalonSRX(1);//54
 
 	public static final int TIMEOUT = 200;
 	

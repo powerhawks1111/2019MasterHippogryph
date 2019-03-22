@@ -278,4 +278,18 @@ public class Dimensions {
 	
 	//tester final double
 	public static final double TEST = 12;
+	public static final double RS_LEVEL_DISTANCE = 28;
+
+	/* PID Vars to be filled in later */
+	
+	public static final double CARGO_LVL1 = 9275;
+	public static final double CARGO_LVL2 = 18200;
+	public static final double CARGO_LVL3 = 24000;
+
+	public static final double PANNEL_LVL1 = 2000;
+	public static final double PANNEL_LVL2 = 11600;
+	public static final double PANNEL_LVL3 = 20600;
+
+	public static final double CHANGE_ANGLE = -1;
+
 }

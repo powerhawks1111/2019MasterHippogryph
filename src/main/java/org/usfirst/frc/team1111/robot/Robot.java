@@ -7,7 +7,8 @@
 
 package org.usfirst.frc.team1111.robot;
 
-import auto.Autonomous;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -15,10 +16,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import power.hawks.frc.lib.auto.cmds.MoveDistCommand;
 //import power.hawks.frc.lib.subsys.DriveTrain;
+import edu.wpi.first.wpilibj.CameraServer;
 import subsys.Release;
 import subsys.HippogryphDrive;
+import vars.ControllerMap;
+import vars.Motors;
 //import vars.Dimensions;
 import vars.Pneumatics;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,17 +33,19 @@ import vars.Pneumatics;
  * project.
  */
 public class Robot extends IterativeRobot {
+
+		Joystick joystick = new Joystick(ControllerMap.D_CONTROLLER_PORT);
 	// Subsystem Instantiation 
 		HippogryphDrive driveTrain = new HippogryphDrive();
 //		Release release = new Release();
-		Compressor compressor = new Compressor();
+		Compressor compressor = new Compressor(); //UNDOOOOOOOOOOOOOOOOOOOOOOOOO
 		
 		// Drive Team instantiation
 		Driver driver = new Driver(driveTrain);
 //		Operator operator = new Operator(release, driveTrain);
 		Operator operator = new Operator(driveTrain);
 
-		Autonomous autonomous = new Autonomous(driveTrain);
+		Autonomus autonomous = new Autonomus(operator.getPiston());
 		
 		// Auto Chooser Instantiation
 		//TODO: Maybe add more later when we actually have a robot FAB
@@ -57,7 +64,7 @@ public class Robot extends IterativeRobot {
 		public final static String POSITION_C1 = "PC2";
 		public final static String POSITION_C2 = "PC2";
 		String startPos;
-		
+		static public int annoyLiam;
 		//possible autonomous destination constants
 		SendableChooser<String> destinationChooser = new SendableChooser<>();
 		public final static String POS_A1_CARGOSHIP_A1 = "PA1_CS_A1";
@@ -83,6 +90,10 @@ public class Robot extends IterativeRobot {
 			startChooser.addDefault("Position C1", POSITION_C1);
 			startChooser.addDefault("Position C2", POSITION_C2);
 			SmartDashboard.putData("Start Position Selector", startChooser);
+			CameraServer.getInstance().startAutomaticCapture();
+			operator.resetEncoders();
+			//Operator.pistonLock.set(Value.kReverse);
+			SmartDashboard.putBoolean("90 DEGREES", false);
 		}
 
 		/**
@@ -104,6 +115,7 @@ public class Robot extends IterativeRobot {
 			autoChoosen = autoChooser.getSelected();
 			startPos = startChooser.getSelected();
 			driveTrain.reset();
+			annoyLiam = 0;
 			//autonomous.genPathway("Test", "Test");
 //			MoveDistCommand test = new MoveDistCommand(driveTrain, Dimensions.TEST * 1883.67, 0);
 //			test.execute();
@@ -121,20 +133,14 @@ public class Robot extends IterativeRobot {
 		 */
 		@Override
 		public void autonomousPeriodic() {
-////		TODO
-////			switch (m_autoSelected) {
-////				case kCustomAuto:
-////					// Put custom auto code here
-////					break;
-////				case kDefaultAuto:
-////				default:
-////					// Put default auto code here
-////					break;
-//			MoveDistCommand test = new MoveDistCommand(driveTrain, Dimensions.TEST * 1883.67, 0);
-//			test.execute();
-//			System.out.println(test.isComplete());
-//			//autonomous.scheduler.run();
-
+			if (joystick.getRawButton(ControllerMap.D_X_BUTTON) || joystick.getRawButton(ControllerMap.D_B_BUTTON)) {
+				System.out.println("Do auto...");
+				autonomous.operate();
+			} else {
+				System.out.println("Do operator and driver...");
+				driver.drive();
+				operator.operate();
+			}
 		}
 		
 
@@ -143,11 +149,17 @@ public class Robot extends IterativeRobot {
 		 */
 		@Override
 		public void teleopPeriodic() {
-			driver.drive();
-			operator.operate();
+			if (joystick.getRawButton(ControllerMap.D_X_BUTTON) || joystick.getRawButton(ControllerMap.D_B_BUTTON)) {
+				System.out.println("Do auto...");
+				autonomous.operate();
+			} else {
+				System.out.println("Do driver and operator...");
+				driver.drive();
+				operator.operate();
+			}
 		}
 		
 		public void disabledinit() {
-			autonomous.reset();
+			//autonomous.reset();
 		}
 }
